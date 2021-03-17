@@ -2,10 +2,10 @@
 // -------------------forEach------------------
 //
 Array.prototype.forEach2 = function (callback) {
-    let arrayLength = this.length;
-
-    for (let i = 0; i < arrayLength; i++) {
-        callback(this[i], i, this);
+    for (let index in this) {
+        if (this.hasOwnProperty(index)) {
+            callback(this[index], index, this);
+        }
     }
 };
 
@@ -17,11 +17,12 @@ Array.prototype.forEach2 = function (callback) {
 // --------------------Map-----------------
 //
 Array.prototype.map2 = function (callback) {
-    let output = [], arrayLength = this.length;
+    let output = [];
 
-    for (let i = 0; i < arrayLength; i++) {
-        let result = callback(this[i], i, this);
-        output.push(result);
+    for (let index in this) {
+        if (this.hasOwnProperty(index)) {
+            output.push(callback(this[index], index, this));
+        }
     }
     return output;
 };
@@ -34,14 +35,16 @@ Array.prototype.map2 = function (callback) {
 //  ----------------Filter--------------
 // 
 Array.prototype.filter2 = function (callback) {
-    let output = [], arrayLength = this.length;
+    let output = [];
 
-    for (let i = 0; i < arrayLength; i++) {
-        callback(this[i], i, this) && output.push(this[i]);
+    for (let index in this) {
+        if (this.hasOwnProperty(index)) {
+            callback(this[index], index, this) && output.push(this[index]);
+        }
     }
     return output;
 };
-// 
+
 
 
 
@@ -51,14 +54,12 @@ Array.prototype.filter2 = function (callback) {
 // -----------------Some----------------
 // 
 Array.prototype.some2 = function (callback) {
-    let arrayLength = this.length, output = false;
-
-    for (let i = 0; i < arrayLength; i++) {
-        if (callback(this[i], i, this)) {
-            output = true;
+    for (let index in this) {
+        if (callback(this[index], index, this)) {
+            return true;
         }
     }
-    return output;
+    return false;
 };
 // Kiểm tra xem trong mảng có phần tử nào thỏe mãn hàm call back không
 
@@ -69,15 +70,25 @@ Array.prototype.some2 = function (callback) {
 // 
 // --------------------Every------------------
 // 
-Array.prototype.every2 = function (callback) {
-    let arrayLength = this.length, output = true;
+// Array.prototype.every2 = function (callback) {
+//     let arrayLength = this.length, output = true;
 
-    for (let i = 0; i < arrayLength; i++) {
-        if (!callback(this[i], i, this)) {
-            output = false;
+//     for (let i = 0; i < arrayLength; i++) {
+//         if (!callback(this[i], i, this)) {
+//             output = false;
+//         }
+//     }
+//     return output;
+// };
+Array.prototype.every2 = function (callback) {
+    for (let index in this) {
+        if (this.hasOwnProperty(index)) {
+            if (!callback(this[index], index, this)) {
+                return false;
+            }
         }
     }
-    return output;
+    return true;
 };
 // Kiểm tra mọi phần tử của mảng có thỏa mãn hàm callback không?
 
@@ -104,38 +115,9 @@ Array.prototype.reduce2 = function (callback, initValue) {
 
 let a = [1, 2, 3, 4]
 b = a.reduce2((total, number) => total + number);
-alert(`Test reduce: ${b}`);
+console.log(b);
 
 
-
-
-
-
-// keyword this & arrow function
-
-const person = {
-    first: 'DINH',
-    last: 'SON',
-    full: () => {
-        console.log(this)
-        this.first + ' ' + this.last;
-    }
-}
-
-
-const bunny = {
-    nam: 'Usagi',
-    tasks: ['transform', 'eat cake', 'blow kisses'],
-    showTasks: function () {
-        console.log(this);
-        var _this = this;
-
-        this.tasks.forEach(function (task) {
-            console.log(this);
-            console.log(_this.nam + " wants to " + task);
-        });
-    }
-};
 
 
 
